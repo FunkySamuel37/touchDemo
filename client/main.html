@@ -1,0 +1,27 @@
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+  <title>touchDemo</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+
+  {{> panbox}}
+</body>
+
+<template name="panbox">
+  <h2>panbox</h2>
+  <!-- {{#HammerTouchArea initOptions=hammerInitOptions gestureMap=templateGestures configureCallback=configureHammer}} -->
+    <div class="panbox-box">
+      {{> box}}
+    </div>
+  <!-- {{/HammerTouchArea}} -->
+
+  <div id="textarea" rows="8" cols="40"></div>
+</template>
+
+<template name="box">
+  <div originWidth="100" style="transform-origin: 50% 50%;width: 100px;height: 100px;background-color: orange;transform: translate3d(0px, 0px, 0px) scale(1, 1) rotate3d(0, 0, 0, 0deg)"></div>
+  <!-- transition: all 1s;  -->
+  <!--<script charset="utf-8" src="./js/hammer.min.js"></script>-->
+</template>
