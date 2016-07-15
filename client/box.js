@@ -76,32 +76,44 @@ Template.box.onRendered(function(){
   }
 
   function onPan(ev) {
+    // console.log(ev);
     // el.className = '';
-    // console.log(`ev.deltaX:${ev.deltaX},ev.deltaY:${ev.deltaY}`);
     if (ev.type == 'panstart') {
-      console.log("first pan");
-
       START_X = transform.translate.x;
       START_Y = transform.translate.y;
-      console.log(`START_X: ${START_X}, START_Y: ${START_Y}`);
-
     }
-    // console.log(ev);
-
     transform.translate = {
       x: START_X + ev.deltaX,
       y: START_Y + ev.deltaY
     };
-    //logical settings translate x and y should > 0, and not be out of the parent
-    transform.translate.x = transform.translate.x < 0 ? 0 : transform.translate.x;
-    // transform.translate.x = transform.translate.x < el.
-    requestElementUpdate();
 
+    //logical settings translate x and y should > 0, and not be out of the parent
+
+    //left
+    transform.translate.x = (transform.translate.x - ((el.offsetWidth*transform.scale - el.offsetWidth)/2)) < 0 ?
+      (el.offsetWidth*transform.scale - el.offsetWidth)/2 :
+      transform.translate.x;
+
+    //right
+    transform.translate.x = (transform.translate.x + (el.offsetWidth*transform.scale - (el.offsetWidth*transform.scale - el.offsetWidth) / 2)) > parentEl.clientWidth ?
+      parentEl.clientWidth - (el.offsetWidth*transform.scale - (el.offsetWidth*transform.scale - el.offsetWidth) / 2):
+      transform.translate.x;
+
+    //top
+    transform.translate.y = (transform.translate.y - ((el.offsetHeight*transform.scale - el.offsetHeight)/2)) < 0 ?
+      (el.offsetHeight*transform.scale - el.offsetHeight)/2 :
+      transform.translate.y;
+
+    //bottom
+    transform.translate.y = (transform.translate.y + (el.offsetHeight*transform.scale - (el.offsetHeight*transform.scale - el.offsetHeight) / 2)) > parentEl.clientHeight ?
+      parentEl.clientHeight - (el.offsetHeight*transform.scale - (el.offsetHeight*transform.scale - el.offsetHeight) / 2):
+      transform.translate.y;
+
+    requestElementUpdate();
   }
 
   var initScale = 1;
   function onPinch(ev) {
-    console.log(ev.type);
 
     if(ev.type == 'pinchstart') {
       initScale = transform.scale || 1;
@@ -109,20 +121,27 @@ Template.box.onRendered(function(){
 
     // el.className = '';
     transform.scale = initScale * ev.scale;
-
+    // TODO: let element stay in the parentNode, by limit scale 
     requestElementUpdate();
 
   }
 
   var initAngle = 0;
+  var rotate;
   function onRotate(ev) {
     if(ev.type == 'rotatestart') {
+      rotate = ev.rotation;
       initAngle = transform.angle || 0;
+      console.log(`initAngle: ${initAngle}`);
+      console.log(ev);
+      console.log("rotatestart");
     }
+    console.log(`angle:${ev.angle} rotation:${ev.rotation}`);
+
 
     // el.className = '';
     transform.rz = 1;
-    transform.angle = initAngle + ev.rotation;
+    transform.angle = initAngle + ev.rotation - rotate;
     requestElementUpdate();
 
   }
